@@ -1,0 +1,34 @@
+server {
+
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /vagrant/public;
+
+    # Add index.php to the list if you are using PHP
+    index index.php index.html index.htm;
+
+    server_name _;
+    sendfile off;
+
+    location / {
+            try_files $uri $uri/ /index.php$args;
+    }
+
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+            fastcgi_split_path_info ^(.+\.php)(/.+)$;
+            fastcgi_pass unix:/var/run/php5-fpm.sock;
+            fastcgi_index index.php;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+    location ~ /\.ht {
+            deny all;
+    }
+}

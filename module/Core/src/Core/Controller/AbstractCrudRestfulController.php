@@ -21,20 +21,6 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
     protected $form;
 
     /**
-     * Resposta padrão
-     * @var array
-     */
-    protected $response;
-
-    public function __construct()
-    {
-        $this->response = [
-            'messages' => [], // ['ns' => '', 'text' => '']
-            'data' => [],
-        ];
-    }
-
-    /**
      * Method: GET
      * Retorna uma lista de elementos
      *
@@ -44,17 +30,21 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
     {
         $page = $this->params()->fromRoute('page', 1);
 
-        $list = $this->service->getRepository()->findAll();
+        $list = $this->service
+                        ->getRepository()
+                        ->findAll();
 
         $paginator = new Paginator(new ArrayAdapter($list));
         $paginator->setCurrentPageNumber($page)
                     ->setDefaultItemCountPerPage(20);
 
-        $this->response['data'] = [
-            'entities' => iterator_to_array($paginator->getCurrentItems(), false),
-            'pages' => get_object_vars($paginator->getPages()),
-        ];
-        return new JsonModel($this->response);
+        return new JsonModel([
+            'messages' => [],
+            'data' => [
+                'entities' => iterator_to_array($paginator->getCurrentItems(), false),
+                'pages' => get_object_vars($paginator->getPages()),
+            ]
+        ]);
     }
 
     /**
@@ -66,24 +56,30 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
      */
     public function get($id)
     {
-        $entity = $this->service->getRepository()->findOneById($id);
+        $entity = $this->service
+                        ->getRepository()
+                        ->findOneById($id);
 
         if(empty($entity))
         {
-            array_push(
-                $this->response['messages'],
-                [
-                    'ns' => 'warning',
-                    'message' => 'Registro não encontrado!'
-                ]
-            );
+            $return = [
+                'messages' => [
+                    [
+                        'ns' => 'warning',
+                        'message' => 'Registro não encontrado!'
+                    ]
+                ],
+                'data' => []
+            ];
         } else {
-            array_push(
-                $this->response['data'],
-                ['entity' => $entity]
-            );
+            $return = [
+                'messages' => [],
+                'data' => [
+                    'entity' => $entity
+                ]
+            ];
         }
-        return new JsonModel($this->response);
+        return new JsonModel($return);
     }
 
     /**
@@ -95,7 +91,62 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
      */
     public function create($data)
     {
-        return new JsonModel($this->response);
+        $form = new $this->form('', ['em' => $this->service->getEntityManager()]);
+        $form->setData($data);
+
+        $return = ['messages' => [], 'data' => []];
+
+        if($form->isValid())
+        {
+            try {
+                $entity = $this->service->persist($form->getData());
+                if(!empty($entity))
+                {
+                    $return = [
+                        'messages' => [
+                            [
+                                'ns' => 'success',
+                                'message' => 'Registro inserido com sucesso!'
+                            ]
+                        ],
+                        'data' => [
+                            'entity' => $entity
+                        ]
+                    ];
+                } else {
+                    $return = [
+                        'messages' => [
+                            [
+                                'ns' => 'danger',
+                                'message' => 'Não foi possível inserir o registro!'
+                            ]
+                        ],
+                        'data' => []
+                    ];
+                }
+
+            } catch (\Exception $e) {
+                $return = [
+                    'messages' => [
+                        [
+                            'ns' => 'danger',
+                            'message' => 'Exception - ocorreu um erro!'
+                        ]
+                    ],
+                    'data' => []
+                ];
+            }
+        } else {
+            foreach ($form->getMessages() as $key => $messages) {
+                foreach ($messages as $key2 => $message) {
+                    array_push(
+                        $return['messages'],
+                        ['ns' => $key, 'message' => $message]
+                    );
+                }
+            }
+        }
+        return new JsonModel($return);
     }
 
     /**
@@ -108,7 +159,78 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
      */
     public function update($id, $data)
     {
-        return new JsonModel($this->response);
+        $entity = $this->service
+                        ->getRepository()
+                        ->findOneById($id);
+        $return = ['messages' => [], 'data' => []];
+
+        if(!empty($entity))
+        {
+            $form = new $this->form('', ['em' => $this->service->getEntityManager()]);
+            $form->setData($data);
+
+            if($form->isValid())
+            {
+                try {
+                    $entity = $this->service->persist($form->getData(), $entity->getId());
+                    if(!empty($entity))
+                    {
+                        $return = [
+                            'messages' => [
+                                [
+                                    'ns' => 'success',
+                                    'message' => 'Registro inserido com sucesso!'
+                                ]
+                            ],
+                            'data' => [
+                                'entity' => $entity
+                            ]
+                        ];
+                    } else {
+                        $return = [
+                            'messages' => [
+                                [
+                                    'ns' => 'danger',
+                                    'message' => 'Não foi possível inserir o registro!'
+                                ]
+                            ],
+                            'data' => []
+                        ];
+                    }
+
+                } catch (\Exception $e) {
+                    $return = [
+                        'messages' => [
+                            [
+                                'ns' => 'danger',
+                                'message' => 'Exception - ocorreu um erro!'
+                            ]
+                        ],
+                        'data' => []
+                    ];
+                }
+            } else {
+                foreach ($form->getMessages() as $key => $messages) {
+                    foreach ($messages as $key2 => $message) {
+                        array_push(
+                            $return['messages'],
+                            ['ns' => $key, 'message' => $message]
+                        );
+                    }
+                }
+            }
+        } else {
+            $return = [
+                'messages' => [
+                    [
+                        'ns' => 'danger',
+                        'message' => 'O registro não pode ser encontrado!'
+                    ]
+                ],
+                'data' => []
+            ];
+        }
+        return new JsonModel($return);
     }
 
     /**
@@ -120,6 +242,48 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
      */
     public function delete($id)
     {
-        return new JsonModel($this->response);
+        $entity = $this->service
+                        ->getRepository()
+                        ->findOneById($id);
+        $return = ['messages' => [], 'data' => []];
+
+        if(!empty($entity))
+        {
+            $id = $this->service->delete($entity->getId());
+            if(!empty($id)) {
+                $return = [
+                    'messages' => [
+                        [
+                            'ns' => 'success',
+                            'message' => 'Registro excluído com sucesso!'
+                        ]
+                    ],
+                    'data' => [
+                        'id' => $id
+                    ]
+                ];
+            } else {
+                $return = [
+                    'messages' => [
+                        [
+                            'ns' => 'danger',
+                            'message' => 'Não foi possível excluír o registro!'
+                        ]
+                    ],
+                    'data' => []
+                ];
+            }
+        } else {
+            $return = [
+                'messages' => [
+                    [
+                        'ns' => 'danger',
+                        'message' => 'O registro não pode ser encontrado!'
+                    ]
+                ],
+                'data' => []
+            ];
+        }
+        return new JsonModel($return);
     }
 }

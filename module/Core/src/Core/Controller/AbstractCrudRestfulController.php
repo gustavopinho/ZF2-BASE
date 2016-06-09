@@ -38,10 +38,16 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
         $paginator->setCurrentPageNumber($page)
                     ->setDefaultItemCountPerPage(20);
 
+        $entities = [];
+        // Verificar essa parte do código para uma solução melhor
+        foreach ($paginator->getCurrentItems() as $key => $value)
+        {
+            array_push($entities, $value->toArray());
+        }
         return new JsonModel([
             'messages' => [],
             'data' => [
-                'entities' => iterator_to_array($paginator->getCurrentItems(), false),
+                'entities' => $entities,
                 'pages' => get_object_vars($paginator->getPages()),
             ]
         ]);
@@ -75,7 +81,7 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
             $return = [
                 'messages' => [],
                 'data' => [
-                    'entity' => $entity
+                    'entity' => $entity->toArray()
                 ]
             ];
         }
@@ -110,7 +116,7 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
                             ]
                         ],
                         'data' => [
-                            'entity' => $entity
+                            'entity' => $entity->toArray()
                         ]
                     ];
                 } else {
@@ -141,7 +147,7 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
                 foreach ($messages as $key2 => $message) {
                     array_push(
                         $return['messages'],
-                        ['ns' => $key, 'message' => $message]
+                        ['ns' => 'danger', 'message' => $key.' - '.$message]
                     );
                 }
             }
@@ -179,11 +185,11 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
                             'messages' => [
                                 [
                                     'ns' => 'success',
-                                    'message' => 'Registro inserido com sucesso!'
+                                    'message' => 'Registro atualizado com sucesso!'
                                 ]
                             ],
                             'data' => [
-                                'entity' => $entity
+                                'entity' => $entity->toArray()
                             ]
                         ];
                     } else {
@@ -191,7 +197,7 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
                             'messages' => [
                                 [
                                     'ns' => 'danger',
-                                    'message' => 'Não foi possível inserir o registro!'
+                                    'message' => 'Não foi possível atualizar o registro!'
                                 ]
                             ],
                             'data' => []
@@ -214,7 +220,7 @@ abstract class AbstractCrudRestfulController extends AbstractRestfulController
                     foreach ($messages as $key2 => $message) {
                         array_push(
                             $return['messages'],
-                            ['ns' => $key, 'message' => $message]
+                            ['ns' => 'danger', 'message' => $key.' - '.$message]
                         );
                     }
                 }

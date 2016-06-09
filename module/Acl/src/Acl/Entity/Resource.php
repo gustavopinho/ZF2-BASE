@@ -7,7 +7,7 @@ use Zend\Stdlib\Hydrator;
 /**
  * Class Resource
  *
- * @ORM\Table(name=acl_resource)
+ * @ORM\Table(name="acl_resource")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="Acl\Repository\Resource")
@@ -70,7 +70,7 @@ class Resource
      *
      * @return self
      */
-    public function setId(intenger $id)
+    public function setId($id)
     {
         $this->id = $id;
 
@@ -118,7 +118,7 @@ class Resource
      */
     public function setCreated()
     {
-        $this->created = = new \DateTime("now");
+        $this->created = new \DateTime("now");
 
         return $this;
     }

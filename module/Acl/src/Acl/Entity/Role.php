@@ -7,7 +7,7 @@ use Zend\Stdlib\Hydrator;
 /**
  * Class Role
  *
- * @ORM\Table(name=acl_role)
+ * @ORM\Table(name="acl_role")
  * @ORM\Entity
  * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="Acl\Repository\Role")
@@ -38,14 +38,14 @@ class Role
      *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      * })
      */
-    private $parent;
+    private $parent=null;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="developer", type="boolean", nullable=false)
      */
-    private $developer;
+    private $developer=false;
 
     /**
      * @var datetime
@@ -183,7 +183,7 @@ class Role
      */
     public function setCreated()
     {
-        $this->created = = new \DateTime("now");
+        $this->created = new \DateTime("now");
 
         return $this;
     }
@@ -214,7 +214,7 @@ class Role
 
     /**
      * Get the values of Role
-     * 
+     *
      * @return array
      */
     public function toArray()

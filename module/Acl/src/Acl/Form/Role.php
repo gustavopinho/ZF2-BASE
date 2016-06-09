@@ -68,7 +68,7 @@ class Role extends Form
             )
         ));
 
-        $this->add(array(
+        /*$this->add(array(
             'type' => '\Zend\Form\Element\Csrf',
             'name' => 'csrf',
             'options' => array(
@@ -76,7 +76,7 @@ class Role extends Form
                     'timeout' => 600
                 )
             )
-        ));
+        ));*/
 
         $this->add(array(
             'name' => 'submit',

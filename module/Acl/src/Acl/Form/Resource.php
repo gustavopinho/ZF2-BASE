@@ -41,7 +41,7 @@ class Resource extends Form
             ),
         ));
 
-        $this->add(array(
+        /*$this->add(array(
             'type' => '\Zend\Form\Element\Csrf',
             'name' => 'csrf',
             'options' => array(
@@ -49,7 +49,7 @@ class Resource extends Form
                     'timeout' => 600
                 )
             )
-        ));
+        ));*/
 
         $this->add(array(
             'name' => 'submit',

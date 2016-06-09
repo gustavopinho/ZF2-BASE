@@ -12,6 +12,8 @@ return array(
         'DoctrineModule',
         'DoctrineORMModule',
         'DoctrineDataFixtureModule',
+        'Core',
+        'Acl',
         'Application',
     ),
 

@@ -41,6 +41,7 @@
         vm.searchFish = '';
         vm.resources = [];
         vm.resource = {'id' : '', 'name' : ''};
+        vm.messages = [];
 
         // Functions
         vm.saveResource = saveResource;
@@ -63,6 +64,7 @@
                 ResourceService.update({id:vm.resource.id}, vm.resource,
                     function(data) {
                         vm.resource = {'id' : '', 'name' : ''};
+                        vm.messages = data.messages;
                         listResources();
                     },
                     function(){
@@ -72,6 +74,7 @@
                 ResourceService.save(vm.resource,
                     function(data){
                         vm.resource = {'id' : '', 'name' : ''};
+                        vm.messages = data.messages;
                         listResources();
                     },
                     function(data){
@@ -86,6 +89,7 @@
                 function(data) {
                     vm.resource.id = data.data.entity.id;
                     vm.resource.name = data.data.entity.name;
+                    vm.messages = data.messages;
                 },
                 function(data) {
                     console.log(data);
@@ -98,6 +102,7 @@
             {
                 ResourceService.delete({id:id},
                     function(data) {
+                        vm.messages = data.messages;
                         listResources();
                     },
                     function(){

@@ -28,6 +28,12 @@
           </div>
       </div>
       <div class="col-xs-12">
+          <div ng-repeat="msg in vm.messages" class="alert alert-{{ msg.ns }}">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <span ng-bind-html="msg.message"></span>
+          </div>
+      </div>
+      <div class="col-xs-12">
         <div class="box">
           <div class="box-header">
             <h3 class="box-title">Resources</h3>

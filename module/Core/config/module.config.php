@@ -2,5 +2,12 @@
 namespace Core;
 
 return array(
-    // config
+    'service_manager' => array(
+        'invokables' => array(
+            'Image\Imagine' => 'Imagine\Gd\Imagine',
+        ),
+        'factories' => array(
+            'Image\Service\Image' => 'Image\Service\ImageFactory'
+        )
+    ),
 );

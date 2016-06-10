@@ -18,4 +18,18 @@ class Module
             ),
         );
     }
+
+    public function getViewHelperConfig()
+    {
+        return array(
+            'factories' => array(
+                'flashMessenger' => function ($sm) {
+                    $flashmessenger = $sm->getServiceLocator()
+                                            ->get('ControllerPluginManager')
+                                            ->get('flashmessenger');
+                    return new View\Helper\FlashMessenger($flashmessenger);
+                },
+            ),
+        );
+    }
 }

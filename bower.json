@@ -1,0 +1,30 @@
+{
+  "name": "zf-base",
+  "authors": [
+    "Jorge Gustavo e Luíz Tibo"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "public/static/libs"
+  ],
+  "dependencies": {
+    "angular": "angularjs#^1.5.0",
+    "angular-route": "^1.5.0",
+    "angular-resource": "^1.5.0",
+    "angular-sanitize": "^1.5.0",
+    "angular-mocks": "^1.5.0",
+    "AdminLTE": "admin-lte#^2.3.3"
+  }
+}

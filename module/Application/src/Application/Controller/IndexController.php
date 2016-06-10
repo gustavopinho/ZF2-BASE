@@ -19,4 +19,11 @@ class IndexController extends AbstractActionController
         $this->flashMessenger()->addMessage('Messager Ok! Success :)', 'success');
         return new ViewModel();
     }
+
+    public  function adminAction()
+    {
+        $layout = $this->layout();
+        $layout->setTemplate('layout/admin');
+        return new ViewModel();
+    }
 }

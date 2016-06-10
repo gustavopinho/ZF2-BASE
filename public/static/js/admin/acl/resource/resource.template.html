@@ -1,0 +1,75 @@
+<section class="content-header">
+    <h1>Acl <small>Resources</small></h1>
+    <ol class="breadcrumb">
+        <li><a href="/admin"><i class="fa fa-dashboard"></i>Dashboardasd</a></li>
+        <li class="active">Acl</li>
+        <li class="active">Resources</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Resource register</h3>
+                </div>
+                <form role="form">
+                    <input type="hidden" ng-model="vm.resource.id">
+                    <div class="box-body">
+                        <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" ng-model="vm.resource.name" placeholder="Enter name">
+                        </div>
+                    </div>
+                    <div class="box-footer text-right">
+                        <button type="button" ng-click="vm.saveResource()" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+          </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="box">
+          <div class="box-header">
+            <h3 class="box-title">Resources</h3>
+            <div class="box-tools">
+              <div class="input-group input-group-sm" style="width: 150px;">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+                <input type="text" name="table_search" ng-model="vm.searchFish" class="form-control pull-right" placeholder="Search">
+              </div>
+            </div>
+          </div>
+          <div class="box-body table-responsive no-padding">
+            <table class="table table-hover">
+              <tr>
+                <th>
+                    <a href="#" ng-click="vm.sortType = 'id'; vm.sortReverse = !vm.sortReverse">
+                        ID
+                        <span ng-show="vm.sortType == 'id' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.sortType == 'id' && vm.sortReverse" class="fa fa-caret-up"></span>
+                   </a>
+                </th>
+                <th>
+                    <a href="#" ng-click="vm.sortType = 'name'; vm.sortReverse = !vm.sortReverse">
+                        Name
+                        <span ng-show="vm.sortType == 'name' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="vm.sortType == 'name' && vm.sortReverse" class="fa fa-caret-up"></span>
+                   </a>
+                </th>
+                <th></th>
+              </tr>
+              <tr ng-repeat="resource in vm.resources | orderBy:vm.sortType:vm.sortReverse | filter:vm.searchFish">
+                <td>{{ resource.id }}</td>
+                <td>{{ resource.name }}</td>
+                <td class="text-right">
+                    <button class="btn btn-sm btn-info" ng-click="vm.getResource(resource.id)"> <i class="fa fa-edit"> </i> Edit</button>
+                    <button class="btn btn-sm btn-danger" ng-click="vm.deleteResource(resource.id)"> <i class="fa fa-trash-o"> </i> Delete</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

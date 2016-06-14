@@ -1,12 +1,11 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('AdminApp')
         .controller('DashBoardController', DashBoardController);
 
-    function DashBoardController()
-    {
+    function DashBoardController() {
         var vm = this;
         vm.name = 'DashBoardController'
     }

@@ -1,38 +1,13 @@
-(function(){
+(function() {
     'use strict';
 
     angular
         .module('AdminApp')
-        .service('ResourceService', ['$resource', ResourceService])
-        .controller('ResourceController',['$window', 'ResourceService', ResourceController]);
+        .controller('ResourceController', ResourceController);
 
-    function ResourceService($resource)
-    {
-        return $resource('/api/acl/resource.json', {}, {
-            getList: {
-                method :'GET',
-                headers: {'Content-Type': 'application/json'}
-            },
-            get: {
-                method :'GET',
-                url: '/api/acl/resource/:id.json',
-                headers: {'Content-Type': 'application/json'}
-            },
-            update: {
-                method :'PUT',
-                url: '/api/acl/resource/:id.json',
-                headers: {'Content-Type': 'application/json'}
-            },
-            delete: {
-                method :'DELETE',
-                url: '/api/acl/resource/:id.json',
-                headers: {'Content-Type': 'application/json'}
-            },
-        });
-    }
+    ResourceController.$inject = ['$window', 'ResourceService'];
 
-    function ResourceController($window, ResourceService)
-    {
+    function ResourceController($window, ResourceService) {
         var vm = this;
 
         // Variables
@@ -40,52 +15,68 @@
         vm.sortReverse = false;
         vm.searchFish = '';
         vm.resources = [];
-        vm.resource = {'id' : '', 'name' : ''};
+        vm.resource = {
+            'id': '',
+            'name': ''
+        };
         vm.messages = [];
+        vm.pages = [];
+        vm.page = 1;
 
         // Functions
+        vm.listResources = listResources;
         vm.saveResource = saveResource;
         vm.getResource = getResource;
         vm.deleteResource = deleteResource;
 
-        function listResources() {
-            ResourceService.getList({},
+        function listResources(page) {
+            vm.page = page;
+            ResourceService.getList({page:page},
                 function(data) {
                     vm.resources = data.data.entities;
+                    vm.pages =  data.data.pages;
                 },
                 function(data) {
                     console.log(data);
                 });
         }
 
-        function saveResource()
-        {
-            if(vm.resource.id) {
-                ResourceService.update({id:vm.resource.id}, vm.resource,
+        function saveResource() {
+            if (vm.resource.id) {
+                ResourceService.update({
+                        id: vm.resource.id
+                    }, vm.resource,
                     function(data) {
-                        vm.resource = {'id' : '', 'name' : ''};
+                        vm.resource = {
+                            'id': '',
+                            'name': ''
+                        };
                         vm.messages = data.messages;
-                        listResources();
+                        listResources(vm.page);
                     },
-                    function(){
+                    function() {
                         console.log(data);
                     });
             } else {
                 ResourceService.save(vm.resource,
-                    function(data){
-                        vm.resource = {'id' : '', 'name' : ''};
+                    function(data) {
+                        vm.resource = {
+                            'id': '',
+                            'name': ''
+                        };
                         vm.messages = data.messages;
-                        listResources();
+                        listResources(vm.page);
                     },
-                    function(data){
+                    function(data) {
                         console.log(data);
                     });
             }
         }
 
-        function getResource(id)
-        {
-            ResourceService.get({id:id},
+        function getResource(id) {
+            ResourceService.get({
+                    id: id
+                },
                 function(data) {
                     vm.resource.id = data.data.entity.id;
                     vm.resource.name = data.data.entity.name;
@@ -96,20 +87,20 @@
                 });
         }
 
-        function deleteResource(id)
-        {
-            if($window.confirm('Are you sure to delete this item?'))
-            {
-                ResourceService.delete({id:id},
+        function deleteResource(id) {
+            if ($window.confirm('Are you sure to delete this item?')) {
+                ResourceService.delete({
+                        id: id
+                    },
                     function(data) {
                         vm.messages = data.messages;
-                        listResources();
+                        listResources(vm.page);
                     },
-                    function(){
+                    function() {
                         console.log(data);
                     });
             }
         }
-        listResources();
+        listResources(vm.page);
     }
 })();

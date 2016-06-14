@@ -1,14 +1,152 @@
 <section class="content-header">
-  <h1>
-    Acl
-    <small>Roles</small>
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="/#/"><i class="fa fa-dashboard"></i>Dashboardasd</a></li>
-    <li class="active">AclRoles</li>
-    <li class="active">Roles</li>
-  </ol>
+    <h1>
+        Acl
+        <small>Roles</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li>
+            <a href="/admin">
+                <i class="fa fa-dashboard"></i>Dashboardasd</a>
+        </li>
+        <li class="active">Acl</li>
+        <li class="active">Roles</li>
+    </ol>
 </section>
 <section class="content">
-  {{ vm.name }}
+    <div class="row">
+        <div class="col-xs-12">
+            <div ng-repeat="msg in vm.messages" class="alert alert-{{ msg.ns }} alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <span ng-bind-html="msg.message"></span>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Role register</h3>
+                </div>
+                <form role="form">
+                    <input type="hidden" ng-model="vm.role.id">
+                    <div class="box-body">
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" ng-model="vm.role.name" placeholder="Enter name">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="form-group">
+                                <label for="name">Parent</label>
+                                <select class="form-control" id="name" ng-model="vm.role.parent">
+                                    <option></option>
+                                    <option ng-repeat="role in vm.allRoles" value="{{ role.id }}">
+                                        {{ role.name }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" ng-model="vm.role.developer">
+                                    Developer?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer text-right">
+                        <button type="button" ng-click="vm.saveRole()" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Roles</h3>
+                    <div class="box-tools">
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <div class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <input type="text" name="table_search" ng-model="vm.searchFish" class="form-control pull-right" placeholder="Search">
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>
+                                <a href="#" ng-click="vm.sortType = 'id'; vm.sortReverse = !vm.sortReverse">
+                                    ID
+                                    <span ng-show="vm.sortType == 'id' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                                    <span ng-show="vm.sortType == 'id' && vm.sortReverse" class="fa fa-caret-up"></span>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="#" ng-click="vm.sortType = 'name'; vm.sortReverse = !vm.sortReverse">
+                                    Name
+                                    <span ng-show="vm.sortType == 'name' && !vm.sortReverse" class="fa fa-caret-down"></span>
+                                    <span ng-show="vm.sortType == 'name' && vm.sortReverse" class="fa fa-caret-up"></span>
+                                </a>
+                            </th>
+                            <th>Parent</th>
+                            <th class="text-center">Developer</th>
+                            <th>Created</th>
+                            <th>Updated</th>
+                            <th></th>
+                        </tr>
+                        <tr ng-repeat="role in vm.roles | orderBy:vm.sortType:vm.sortReverse | filter:vm.searchFish">
+                            <td>{{ role.id }}</td>
+                            <td>{{ role.name }}</td>
+                            <td>{{ vm.getParent(role.parent) }}</td>
+                            <td class="text-center">
+                                <span class="label label-success" ng-if="role.developer == true">Yes</span>
+                                <span class="label label-danger" ng-if="role.developer == false">No</span>
+                            </td>
+                            <td>{{ role.created | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            <td>{{ role.updated | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                            <td class="text-right">
+                                <button class="btn btn-sm btn-info" ng-click="vm.getRole(role.id)">
+                                    <i class="fa fa-edit"></i>
+                                    Edit</button>
+                                <button class="btn btn-sm btn-danger" ng-click="vm.deleteRole(role.id)">
+                                    <i class="fa fa-trash-o"></i>
+                                    Delete</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="box-footer">
+                    <nav ng-if="vm.pages.pageCount > 1">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <li ng-class="vm.pages.first == vm.pages.current ? 'disabled' : ''">
+                                <a href="#" ng-click="vm.listRoles(vm.pages.first)" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-fast-backward"></span>
+                                </a>
+                            </li>
+                            <li ng-class="!vm.pages.previous ? 'disabled' : ''">
+                                <a href="#" ng-click="vm.listRoles(vm.pages.previous)" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-step-backward"></span>
+                                </a>
+                            </li>
+                            <li ng-class="{active: vm.pages.current == p}" ng-repeat="p in vm.pages.pagesInRange">
+                                <a href="#" ng-click="vm.listRoles(p)">{{p}}</a>
+                            </li>
+                            <li ng-class="!vm.pages.next ? 'disabled' : ''">
+                                <a href="#" ng-click="vm.listRoles(vm.pages.next)" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-step-forward"></span>
+                                </a>
+                            </li>
+                            <li ng-class="vm.pages.last == vm.pages.current ? 'disabled' : ''">
+                                <a href="#" ng-click="vm.listRoles(vm.pages.last)" aria-hidden="true">
+                                    <span class="glyphicon glyphicon-fast-forward"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>

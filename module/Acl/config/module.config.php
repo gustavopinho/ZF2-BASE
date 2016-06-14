@@ -19,7 +19,7 @@ return array(
                     'default' => array(
                         'type' => 'Segment',
                         'options' => array(
-                            'route' => '[/:controller[/:id]].json',
+                            'route' => '[/:controller[/:action][/:id]].json',
                             'constraints' => array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',

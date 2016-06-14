@@ -1,11 +1,12 @@
 <?php
+
 namespace Acl\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Stdlib\Hydrator;
 
 /**
- * Class Privilege
+ * Class Privilege.
  *
  * @ORM\Table(name="acl_privilege")
  * @ORM\Entity
@@ -15,7 +16,7 @@ use Zend\Stdlib\Hydrator;
 class Privilege
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -67,16 +68,16 @@ class Privilege
     /**
      * @param array $options
      */
-    public function __construct($options=[])
+    public function __construct($options = [])
     {
         (new Hydrator\ClassMethods())->hydrate($options, $this);
         $this->setCreated()->setUpdated();
     }
 
     /**
-     * Get the value of Id
+     * Get the value of Id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -84,9 +85,9 @@ class Privilege
     }
 
     /**
-     * Set the value of Id
+     * Set the value of Id.
      *
-     * @param integer id
+     * @param int id
      *
      * @return self
      */
@@ -98,7 +99,7 @@ class Privilege
     }
 
     /**
-     * Get the value of Name
+     * Get the value of Name.
      *
      * @return string
      */
@@ -108,7 +109,7 @@ class Privilege
     }
 
     /**
-     * Set the value of Name
+     * Set the value of Name.
      *
      * @param string name
      *
@@ -122,7 +123,7 @@ class Privilege
     }
 
     /**
-     * Get the value of Resource
+     * Get the value of Resource.
      *
      * @return \Acl\Entity\Resource
      */
@@ -132,7 +133,7 @@ class Privilege
     }
 
     /**
-     * Set the value of Resource
+     * Set the value of Resource.
      *
      * @param \Acl\Entity\Resource resource
      *
@@ -146,7 +147,7 @@ class Privilege
     }
 
     /**
-     * Get the value of Role
+     * Get the value of Role.
      *
      * @return \Acl\Entity\Role
      */
@@ -156,7 +157,7 @@ class Privilege
     }
 
     /**
-     * Set the value of Role
+     * Set the value of Role.
      *
      * @param \Acl\Entity\Role role
      *
@@ -170,7 +171,7 @@ class Privilege
     }
 
     /**
-     * Get the value of Created
+     * Get the value of Created.
      *
      * @return datetime
      */
@@ -180,19 +181,19 @@ class Privilege
     }
 
     /**
-     * Set the value of Created
+     * Set the value of Created.
      *
      * @return self
      */
     public function setCreated()
     {
-        $this->created = new \DateTime("now");
+        $this->created = new \DateTime('now');
 
         return $this;
     }
 
     /**
-     * Get the value of Updated
+     * Get the value of Updated.
      *
      * @return datetime
      */
@@ -202,21 +203,22 @@ class Privilege
     }
 
     /**
-     * Set the value of Updated
+     * Set the value of Updated.
      *
      * @ORM\PrePersist
+     * @ORM\PreUpdate
      *
      * @return self
      */
     public function setUpdated()
     {
-        $this->updated = new \DateTime("now");
+        $this->updated = new \DateTime('now');
 
         return $this;
     }
 
     /**
-     * Get the values of Role
+     * Get the values of Role.
      *
      * @return array
      */
@@ -225,6 +227,9 @@ class Privilege
         $array = (new Hydrator\ClassMethods())->extract($this);
         $array['role'] = $this->getRole()->getId();
         $array['resource'] = $this->getResource()->getId();
+        $array['created'] = $this->getCreated()->getTimestamp() * 1000;
+        $array['updated'] = $this->getUpdated()->getTimestamp() * 1000;
+
         return $array;
     }
 }

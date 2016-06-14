@@ -122,6 +122,14 @@ class Role extends Form
             'validators' => array(
             )
         ));
+
+        $inputFilter->add(array(
+            'name'=>'developer',
+            'required' => false,
+            'AllowEmpty' => true,
+            'validators' => array(
+            )
+        ));
         return $inputFilter;
     }
 }

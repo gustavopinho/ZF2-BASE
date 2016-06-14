@@ -34,22 +34,26 @@
         <script src="https://cdn.jsdelivr.net/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
         <!-- Le styles -->
-        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath().'/img/favicon.ico'))
                         ->prependStylesheet($this->basePath('static/libs/AdminLTE/dist/css/skins/skin-black.min.css'))
                         ->prependStylesheet($this->basePath('static/libs/AdminLTE/dist/css/AdminLTE.min.css'))?>
 
         <!-- Scripts -->
         <?php echo $this->headScript()
-            ->prependFile($this->basePath() . '/static/js/admin/acl/privilege/privilege.controller.js')
-            ->prependFile($this->basePath() . '/static/js/admin/acl/resource/resource.controller.js')
-            ->prependFile($this->basePath() . '/static/js/admin/acl/role/role.controller.js')
-            ->prependFile($this->basePath() . '/static/js/admin/dashboard/dashboard.controller.js')
-            ->prependFile($this->basePath() . '/static/js/admin/app.js')
-            ->prependFile($this->basePath() . '/static/libs/angular-sanitize/angular-sanitize.min.js')
-            ->prependFile($this->basePath() . '/static/libs/angular-route/angular-route.min.js')
-            ->prependFile($this->basePath() . '/static/libs/angular-resource/angular-resource.min.js')
-            ->prependFile($this->basePath() . '/static/libs/angular-mocks/angular-mocks.js')
-            ->prependFile($this->basePath() . '/static/libs/angular/angular.min.js')
+            ->prependFile($this->basePath().'/static/js/admin/acl/privilege/privilege.controller.js')
+            ->prependFile($this->basePath().'/static/js/admin/acl/privilege/privilege.service.js')
+            ->prependFile($this->basePath().'/static/js/admin/acl/resource/resource.controller.js')
+            ->prependFile($this->basePath().'/static/js/admin/acl/resource/resource.service.js')
+            ->prependFile($this->basePath().'/static/js/admin/acl/role/role.controller.js')
+            ->prependFile($this->basePath().'/static/js/admin/acl/role/role.service.js')
+            ->prependFile($this->basePath().'/static/js/admin/dashboard/dashboard.controller.js')
+            ->prependFile($this->basePath().'/static/js/admin/error/error.controller.js')
+            ->prependFile($this->basePath().'/static/js/admin/app.js')
+            ->prependFile($this->basePath().'/static/libs/angular-sanitize/angular-sanitize.min.js')
+            ->prependFile($this->basePath().'/static/libs/angular-route/angular-route.min.js')
+            ->prependFile($this->basePath().'/static/libs/angular-resource/angular-resource.min.js')
+            ->prependFile($this->basePath().'/static/libs/angular-mocks/angular-mocks.js')
+            ->prependFile($this->basePath().'/static/libs/angular/angular.min.js')
             ->prependFile($this->basePath('static/libs/AdminLTE/dist/js/app.min.js')); ?>
     </head>
     <body class="hold-transition skin-black sidebar-mini">

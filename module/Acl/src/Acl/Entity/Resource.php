@@ -1,11 +1,12 @@
 <?php
+
 namespace Acl\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Zend\Stdlib\Hydrator;
 
 /**
- * Class Resource
+ * Class Resource.
  *
  * @ORM\Table(name="acl_resource")
  * @ORM\Entity
@@ -47,14 +48,14 @@ class Resource
     /**
      * @param array $options
      */
-    public function __construct($options=[])
+    public function __construct($options = [])
     {
         (new Hydrator\ClassMethods())->hydrate($options, $this);
         $this->setCreated()->setUpdated();
     }
 
     /**
-     * Get the value of Id
+     * Get the value of Id.
      *
      * @return intenger
      */
@@ -64,7 +65,7 @@ class Resource
     }
 
     /**
-     * Set the value of Id
+     * Set the value of Id.
      *
      * @param intenger id
      *
@@ -78,7 +79,7 @@ class Resource
     }
 
     /**
-     * Get the value of Name
+     * Get the value of Name.
      *
      * @return string
      */
@@ -88,7 +89,7 @@ class Resource
     }
 
     /**
-     * Set the value of Name
+     * Set the value of Name.
      *
      * @param string name
      *
@@ -102,7 +103,7 @@ class Resource
     }
 
     /**
-     * Get the value of Created
+     * Get the value of Created.
      *
      * @return datetime
      */
@@ -112,19 +113,19 @@ class Resource
     }
 
     /**
-     * Set the value of Created
+     * Set the value of Created.
      *
      * @return self
      */
     public function setCreated()
     {
-        $this->created = new \DateTime("now");
+        $this->created = new \DateTime('now');
 
         return $this;
     }
 
     /**
-     * Get the value of Updated
+     * Get the value of Updated.
      *
      * @return datetime
      */
@@ -134,27 +135,31 @@ class Resource
     }
 
     /**
-     * Set the value of Updated
+     * Set the value of Updated.
      *
      * @ORM\PrePersist
+     * @ORM\PreUpdate
      *
      * @return self
      */
     public function setUpdated()
     {
-        $this->updated = new \DateTime("now");
+        $this->updated = new \DateTime('now');
 
         return $this;
     }
 
     /**
-     * Get the values of Role
+     * Get the values of Role.
      *
      * @return array
      */
     public function toArray()
     {
         $array = (new Hydrator\ClassMethods())->extract($this);
+        $array['created'] = $this->getCreated()->getTimestamp() * 1000;
+        $array['updated'] = $this->getUpdated()->getTimestamp() * 1000;
+
         return $array;
     }
 }

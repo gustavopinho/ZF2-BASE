@@ -202,6 +202,7 @@ class Role
      * Set the value of Updated
      *
      * @ORM\PrePersist
+     * @ORM\PreUpdate
      *
      * @return self
      */
@@ -221,6 +222,8 @@ class Role
     {
         $array = (new Hydrator\ClassMethods())->extract($this);
         $array['parent'] = $this->getParent() ? $this->getParent()->getId() : null;
+        $array['created'] = $this->getCreated()->getTimestamp()*1000;
+        $array['updated'] = $this->getUpdated()->getTimestamp()*1000;
         return $array;
     }
 }

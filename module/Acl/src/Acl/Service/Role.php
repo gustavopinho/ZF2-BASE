@@ -1,7 +1,7 @@
 <?php
+
 namespace Acl\Service;
 
-use Doctrine\ORM\EntityManager;
 use Core\Service\AbstractService;
 
 class Role extends AbstractService
@@ -13,7 +13,8 @@ class Role extends AbstractService
     }
     public function persist(array $data, $id = null)
     {
-        $data['parent'] = empty($data['parent']) ? null : $this->em->getReference($this->entity, $data['parent']);
+        $data['parent'] = (empty($data['parent']) or $data['parent'] == 'null') ? null : $this->em->getReference($this->entity, $data['parent']);
+
         return parent::persist($data, $id);
     }
 }

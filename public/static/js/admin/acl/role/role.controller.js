@@ -14,6 +14,7 @@
         vm.sortType = 'id';
         vm.sortReverse = false;
         vm.searchFish = '';
+        vm.loading = false;
         vm.roles = [];
         vm.allRoles = [];
         vm.role = {
@@ -34,10 +35,12 @@
         vm.deleteRole = deleteRole;
 
         function listRoles(page) {
+            vm.loading = true;
             RoleService.getList({page:page},
                 function(data) {
                     vm.roles = data.data.entities;
                     vm.pages = data.data.pages;
+                    vm.loading = false;
                 },
                 function(data) {
                     console.log(data);

@@ -19,6 +19,7 @@
         vm.sortType = 'id';
         vm.sortReverse = false;
         vm.searchFish = '';
+        vm.loading = false;
         vm.privileges = [];
         vm.resources = [];
         vm.roles = [];
@@ -35,21 +36,90 @@
 
         // Functions
         vm.listPrivileges = listPrivileges;
-        vm.getRole = getRole;
-        vm.getResource = getResource;
+        vm.savePrivilege = savePrivilege;
+        vm.getPrivilege = getPrivilege;
+        vm.deletePrivilege = deletePrivilege;
 
         function listPrivileges(page) {
+            vm.loading = true;
             vm.page = page;
             PrivilegeService.getList({page:page},
                 function(data) {
                     vm.privileges = data.data.entities;
                     vm.pages = data.data.pages;
+                    vm.loading = false;
                 },
                 function(data) {
                     console.log(data);
                 });
             listRoles();
             listResources();
+        }
+
+        function savePrivilege() {
+            if (vm.privilege.id) {
+                PrivilegeService.update({
+                        id: vm.privilege.id
+                    }, vm.privilege,
+                    function(data) {
+                        vm.privilege = {
+                            'id': '',
+                            'name': '',
+                            'role': '',
+                            'resource': ''
+                        };
+                        vm.messages = data.messages;
+                        listPrivileges(vm.page);
+                    },
+                    function() {
+                        console.log(data);
+                    });
+            } else {
+                PrivilegeService.save(vm.privilege,
+                    function(data) {
+                        vm.privilege = {
+                            'id': '',
+                            'name': '',
+                            'role': '',
+                            'resource': ''
+                        };
+                        vm.messages = data.messages;
+                        listPrivileges(vm.page);
+                    },
+                    function(data) {
+                        console.log(data);
+                    });
+            }
+        }
+
+        function getPrivilege(id) {
+            PrivilegeService.get({
+                    id: id
+                },
+                function(data) {
+                    vm.privilege.id = data.data.entity.id;
+                    vm.privilege.name = data.data.entity.name;
+                    vm.privilege.role = String(data.data.entity.role);
+                    vm.privilege.resource = String(data.data.entity.resource);
+                },
+                function(data) {
+                    console.log(data);
+                });
+        }
+
+        function deletePrivilege(id)
+        {
+            if($window.confirm('Are you sure to delete this item?'))
+            {
+                PrivilegeService.delete({id:id},
+                    function(data) {
+                        vm.messages = data.messages;
+                        listPrivileges(vm.page);
+                    },
+                    function(){
+                        console.log(data);
+                    });
+            }
         }
 
         function listRoles() {

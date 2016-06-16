@@ -14,6 +14,7 @@
         vm.sortType = 'id';
         vm.sortReverse = false;
         vm.searchFish = '';
+        vm.loading = false;
         vm.resources = [];
         vm.resource = {
             'id': '',
@@ -31,10 +32,12 @@
 
         function listResources(page) {
             vm.page = page;
+            vm.loading = true;
             ResourceService.getList({page:page},
                 function(data) {
                     vm.resources = data.data.entities;
                     vm.pages =  data.data.pages;
+                    vm.loading = false;
                 },
                 function(data) {
                     console.log(data);

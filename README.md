@@ -7,7 +7,7 @@ Aplicação base para projetos Zend Framework com php5 e postgresql
 
 Instalação
 ----------
-- git clone git@gitlab.com:gustavopinho/zf-base.git
+- git clone https://github.com/gustavopinho/ZF2-BASE.git
 - vagrant up
 As configurações podem ser alteradas no arquivo Vagrantfile e também em /provision/setup.sh
 
